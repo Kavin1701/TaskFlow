@@ -3,6 +3,7 @@ package com.example.taskflow.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,13 @@ class SplashFragment : Fragment() {
 
         Handler(Looper.myLooper()!!).postDelayed(Runnable {
             if(auth.currentUser != null){
-                navController.navigate(R.id.action_splashFragment_to_homeFragment)
+                var email = auth.currentUser!!.email
+                if (email != null && email.equals("admin@gmail.com")) {
+                    navController.navigate(R.id.action_splashFragment_to_adminFragment)
+                }
+                else{
+                    navController.navigate(R.id.action_splashFragment_to_userFragment)
+                }
             }
             else{
                 navController.navigate(R.id.action_splashFragment_to_loginFragment)

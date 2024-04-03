@@ -46,10 +46,16 @@ class LoginFragment : Fragment() {
             val pass = binding.passEt.text.toString().trim()
 
             if(email.isNotEmpty() && pass.isNotEmpty()){
+
                 auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener({
                     if(it.isSuccessful){
                         Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
-                        navControl.navigate(R.id.action_loginFragment_to_homeFragment)
+                        if (email != null && email.equals("admin@gmail.com")) {
+                            navControl.navigate(R.id.action_loginFragment_to_adminFragment)
+                        }
+                        else{
+                            navControl.navigate(R.id.action_loginFragment_to_userFragment)
+                        }
                     }
                     else{
                         Toast.makeText(context, it.exception?.message, Toast.LENGTH_SHORT).show()
