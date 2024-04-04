@@ -1,5 +1,6 @@
 package com.example.taskflow.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.taskflow.AdminActivity
 import com.example.taskflow.R
+import com.example.taskflow.UserActivity
 import com.example.taskflow.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -51,10 +54,13 @@ class LoginFragment : Fragment() {
                     if(it.isSuccessful){
                         Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
                         if (email != null && email.equals("admin@gmail.com")) {
-                            navControl.navigate(R.id.action_loginFragment_to_adminFragment)
+                            val intent = Intent(requireContext(), AdminActivity::class.java)
+                            startActivity(intent)
+//                            navControl.navigate(R.id.action_loginFragment_to_adminFragment)
                         }
                         else{
-                            navControl.navigate(R.id.action_loginFragment_to_userFragment)
+                            val intent = Intent(requireContext(), UserActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                     else{

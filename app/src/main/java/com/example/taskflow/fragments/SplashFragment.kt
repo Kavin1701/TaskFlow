@@ -1,5 +1,6 @@
 package com.example.taskflow.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,7 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.taskflow.AdminActivity
 import com.example.taskflow.R
+import com.example.taskflow.UserActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashFragment : Fragment() {
@@ -35,10 +38,12 @@ class SplashFragment : Fragment() {
             if(auth.currentUser != null){
                 var email = auth.currentUser!!.email
                 if (email != null && email.equals("admin@gmail.com")) {
-                    navController.navigate(R.id.action_splashFragment_to_adminFragment)
+                    val intent = Intent(requireContext(), AdminActivity::class.java)
+                    startActivity(intent)
                 }
                 else{
-                    navController.navigate(R.id.action_splashFragment_to_userFragment)
+                    val intent = Intent(requireContext(), UserActivity::class.java)
+                    startActivity(intent)
                 }
             }
             else{
