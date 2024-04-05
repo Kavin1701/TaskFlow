@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.taskflow.AdminActivity
 import com.example.taskflow.R
+import com.example.taskflow.TaskActivity
 import com.example.taskflow.UserActivity
 import com.example.taskflow.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -59,7 +60,7 @@ class LoginFragment : Fragment() {
 //                            navControl.navigate(R.id.action_loginFragment_to_adminFragment)
                         }
                         else{
-                            val intent = Intent(requireContext(), UserActivity::class.java)
+                            val intent = Intent(requireContext(), TaskActivity::class.java)
                             startActivity(intent)
                         }
                     }

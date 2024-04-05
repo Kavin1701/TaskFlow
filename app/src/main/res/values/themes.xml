@@ -11,7 +11,7 @@
     <style name="Theme.TaskFlow" parent="Base.Theme.TaskFlow" />
 
     <style name="App.Custom.Indicator" parent = "Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/yellow</item>
+        <item name="android:color">@color/grey1</item>
     </style>
 
 </resources>

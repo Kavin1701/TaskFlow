@@ -3,8 +3,6 @@ package com.example.taskflow
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.taskflow.fragments.UserChatFragment
 import com.example.taskflow.fragments.UserHomeFragment
@@ -19,21 +17,22 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_user)
+        val event = intent.getStringExtra("event")
 
         bottomUserNavigationView = findViewById(R.id.bottom_navigation_user)
 
         bottomUserNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.bottom_menu_home -> {
-                    replaceFragment(UserHomeFragment())
+                R.id.bottom_menu_info -> {
+                    replaceFragment(UserHomeFragment(event))
                     true
                 }
                 R.id.bottom_menu_tasks -> {
-                    replaceFragment(UserTasksFragment())
+                    replaceFragment(UserTasksFragment(event))
                     true
                 }
                 R.id.bottom_menu_chat -> {
-                    replaceFragment(UserChatFragment())
+                    replaceFragment(UserChatFragment(event))
                     true
                 }
                 R.id.bottom_menu_profile -> {
@@ -43,7 +42,7 @@ class UserActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        replaceFragment(UserHomeFragment())
+        replaceFragment(UserHomeFragment(event))
 
     }
 
