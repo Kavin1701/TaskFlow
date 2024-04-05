@@ -6,11 +6,29 @@
     android:gravity="center"
     tools:context=".fragments.SplashFragment">
 
+
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:src="@drawable/logo_taskflow_raw" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
+        android:layout_margin="5dp"
+        android:text="Task"
         android:textStyle="bold|italic"
-        android:text="@string/app_name" />
+        android:textColor="@color/blue1"
+        android:textSize="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Flow"
+        android:textStyle="bold|italic"
+        android:textColor="@color/grey1"
+        android:textSize="40dp" />
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

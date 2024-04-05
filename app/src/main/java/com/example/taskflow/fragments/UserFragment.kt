@@ -44,7 +44,7 @@ class UserFragment : Fragment() {
 
         binding.logoutBt.setOnClickListener {
             auth.signOut()
-            navControl.navigate(R.id.action_userFragment_to_splashFragment)
+//            navControl.navigate(R.id.action_userFragment_to_splashFragment)
         }
     }
 }
