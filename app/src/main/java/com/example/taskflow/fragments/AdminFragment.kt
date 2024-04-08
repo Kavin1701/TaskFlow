@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.taskflow.R
+import com.example.taskflow.databinding.FragmentAddEventBinding
 import com.example.taskflow.databinding.FragmentAdminBinding
 import com.example.taskflow.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,7 @@ class AdminFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var navControl: NavController
     private lateinit var binding: FragmentAdminBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +47,7 @@ class AdminFragment : Fragment() {
             auth.signOut()
             navControl.navigate(R.id.action_adminFragment_to_splashFragment)
         }
+
     }
 
 

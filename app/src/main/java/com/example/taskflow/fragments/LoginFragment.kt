@@ -51,23 +51,23 @@ class LoginFragment : Fragment() {
 
             if(email.isNotEmpty() && pass.isNotEmpty()){
 
-                auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener({
-                    if(it.isSuccessful){
+                binding.progressBar.visibility = View.VISIBLE
+                auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+                    if (it.isSuccessful) {
                         Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
                         if (email != null && email.equals("admin@gmail.com")) {
                             val intent = Intent(requireContext(), AdminActivity::class.java)
                             startActivity(intent)
-//                            navControl.navigate(R.id.action_loginFragment_to_adminFragment)
-                        }
-                        else{
+                        } else {
                             val intent = Intent(requireContext(), TaskActivity::class.java)
                             startActivity(intent)
                         }
-                    }
-                    else{
+                    } else {
                         Toast.makeText(context, it.exception?.message, Toast.LENGTH_SHORT).show()
+
                     }
-                })
+                    binding.progressBar.visibility = View.GONE
+                }
             }
             else{
                 Toast.makeText(context, "Empty fields are not allowed", Toast.LENGTH_SHORT).show()
