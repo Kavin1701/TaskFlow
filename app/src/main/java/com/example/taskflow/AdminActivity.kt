@@ -86,7 +86,7 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
 
     override fun onSaveEvent(eventName: String, eventDesc: String, endDate: String, eventEt: TextInputEditText, eventDescEt: TextInputEditText) {
 
-    val db = FirebaseFirestore.getInstance()
+        val db = FirebaseFirestore.getInstance()
 
         // Query to check if an event with the same name exists
         db.collection("events")
