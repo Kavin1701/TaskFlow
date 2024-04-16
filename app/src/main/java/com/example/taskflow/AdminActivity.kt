@@ -3,12 +3,10 @@ package com.example.taskflow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskflow.databinding.ActivityAdminBinding
-import com.example.taskflow.databinding.FragmentAddEventBinding
 import com.example.taskflow.fragments.AddEventFragment
 import com.example.taskflow.utils.EventData
 import com.example.taskflow.utils.EventNameAdapter
@@ -25,7 +23,8 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
     private lateinit var auth: FirebaseAuth
     private lateinit var popUpFragment: AddEventFragment
     private lateinit var recyclerView: RecyclerView
-    private lateinit var eventList: ArrayList<EventData>
+    private lateinit var adapter: EventNameAdapter
+    private lateinit var eventList: MutableList<EventData>
     private var db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,33 +33,41 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
         setContentView(binding.root)
 
         init()
+        getDataFromFirebase()
         registerEvents()
+    }
 
+    fun init(){
+        auth = FirebaseAuth.getInstance()
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        eventList = mutableListOf()
+        adapter = EventNameAdapter(eventList)
         recyclerView = binding.recyclerview
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = adapter
+    }
 
-
-        eventList = arrayListOf()
-
+    private fun getDataFromFirebase() {
         db = FirebaseFirestore.getInstance()
-        db.collection("events").get().addOnSuccessListener {
-            if (!it.isEmpty){
-                for (data in it.documents){
-                    val event: EventData? = data.toObject(EventData::class.java)
-                    if (event != null) {
-                        eventList.add(event)
+        db.collection("events")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(this, exception.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+                if (snapshot != null && !snapshot.isEmpty) {
+                    eventList.clear() // Clear existing data before adding new data
+                    for (data in snapshot.documents) {
+                        val event: EventData? = data.toObject(EventData::class.java)
+                        if (event != null) {
+                            eventList.add(event)
+                        }
                     }
                     recyclerView.adapter = EventNameAdapter(eventList)
                 }
             }
-        }
-            .addOnFailureListener{
-                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
-            }
     }
-    fun init(){
-        auth = FirebaseAuth.getInstance()
-    }
+
 
     fun registerEvents(){
         binding.logoutBt.setOnClickListener{
@@ -77,8 +84,9 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
         }
     }
 
-    override fun onSaveEvent(eventName: String, eventEt: TextInputEditText) {
-        val db = FirebaseFirestore.getInstance()
+    override fun onSaveEvent(eventName: String, eventDesc: String, endDate: String, eventEt: TextInputEditText, eventDescEt: TextInputEditText) {
+
+    val db = FirebaseFirestore.getInstance()
 
         // Query to check if an event with the same name exists
         db.collection("events")
@@ -88,7 +96,9 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
                 if (documents.isEmpty) {
                     // If no event with the same name exists, add the event
                     val event = hashMapOf(
-                        "eventName" to eventName
+                        "eventName" to eventName,
+                        "eventDesc" to eventDesc,
+                        "endDate" to endDate
                         // Add other fields if needed
                     )
 
@@ -97,6 +107,8 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
                         .addOnSuccessListener { documentReference ->
                             Toast.makeText(this, "Event added successfully", Toast.LENGTH_SHORT).show()
                             eventEt.text = null
+                            eventDescEt.text = null
+
                             popUpFragment.dismiss()
                         }
                         .addOnFailureListener { e ->
@@ -113,3 +125,27 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
     }
 
 }
+
+
+
+//        recyclerView = binding.recyclerview
+//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//
+//
+//        eventList = arrayListOf()
+//
+//        db = FirebaseFirestore.getInstance()
+//        db.collection("events").get().addOnSuccessListener {
+//            if (!it.isEmpty){
+//                for (data in it.documents){
+//                    val event: EventData? = data.toObject(EventData::class.java)
+//                    if (event != null) {
+//                        eventList.add(event)
+//                    }
+//                    recyclerView.adapter = EventNameAdapter(eventList)
+//                }
+//            }
+//        }
+//            .addOnFailureListener{
+//                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+//            }

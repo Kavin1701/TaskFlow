@@ -7,9 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskflow.R
 
-class EventNameAdapter(private val eventList: ArrayList<EventData>) : RecyclerView.Adapter<EventNameAdapter.MyViewHolder>() {
+class EventNameAdapter(private val eventList: MutableList<EventData>) : RecyclerView.Adapter<EventNameAdapter.MyViewHolder>() {
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val Name : TextView = itemView.findViewById(R.id.eventName)
+        val Desc : TextView = itemView.findViewById(R.id.eventDesc)
+        val eventDate : TextView = itemView.findViewById(R.id.eventDate)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -23,6 +25,7 @@ class EventNameAdapter(private val eventList: ArrayList<EventData>) : RecyclerVi
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.Name.text = eventList[position].eventName
-
+        holder.Desc.text = eventList[position].eventDesc
+        holder.eventDate.text = eventList[position].endDate
     }
 }
