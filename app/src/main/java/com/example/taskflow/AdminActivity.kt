@@ -98,7 +98,8 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
                     val event = hashMapOf(
                         "eventName" to eventName,
                         "eventDesc" to eventDesc,
-                        "endDate" to endDate
+                        "endDate" to endDate,
+                        "status" to "live",
                         // Add other fields if needed
                     )
 

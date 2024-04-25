@@ -1,5 +1,6 @@
 package com.example.taskflow.fragments
 
+import EventPage
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,9 +11,8 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.taskflow.AdminActivity
-import com.example.taskflow.R
-import com.example.taskflow.TaskActivity
-import com.example.taskflow.UserActivity
+import com.example.taskflow.EventsActivity
+
 import com.example.taskflow.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -59,7 +59,7 @@ class LoginFragment : Fragment() {
                             val intent = Intent(requireContext(), AdminActivity::class.java)
                             startActivity(intent)
                         } else {
-                            val intent = Intent(requireContext(), TaskActivity::class.java)
+                            val intent = Intent(requireContext(), EventsActivity::class.java)
                             startActivity(intent)
                         }
                     } else {
