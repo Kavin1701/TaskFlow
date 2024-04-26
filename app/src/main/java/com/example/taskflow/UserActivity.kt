@@ -17,22 +17,25 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_user)
-        val event = intent.getStringExtra("event")
+        val eventName = intent.getStringExtra("eventName")
+        val eventDesc = intent.getStringExtra("eventDesc")
+        val endDate = intent.getStringExtra("endDate")
+        val eventNameList = intent.getStringArrayListExtra("eventNameList")
 
         bottomUserNavigationView = findViewById(R.id.bottom_navigation_user)
 
         bottomUserNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.bottom_menu_info -> {
-                    replaceFragment(UserHomeFragment(event))
+                    replaceFragment(UserHomeFragment(eventName))
                     true
                 }
                 R.id.bottom_menu_tasks -> {
-                    replaceFragment(UserTasksFragment(event))
+                    replaceFragment(UserTasksFragment(eventName))
                     true
                 }
                 R.id.bottom_menu_chat -> {
-                    replaceFragment(UserChatFragment(event))
+                    replaceFragment(UserChatFragment(eventName))
                     true
                 }
                 R.id.bottom_menu_profile -> {
@@ -42,7 +45,7 @@ class UserActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        replaceFragment(UserHomeFragment(event))
+        replaceFragment(UserHomeFragment(eventName))
 
     }
 

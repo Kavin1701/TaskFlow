@@ -14,6 +14,7 @@ import com.example.taskflow.databinding.ActivityEventPageBinding
 import com.example.taskflow.utils.EventData
 import com.example.taskflow.utils.EventData2
 import com.example.taskflow.utils.EventNameAdapter
+import com.example.taskflow.utils.EventNameAdapter2
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -25,13 +26,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class EventsActivity : AppCompatActivity() {
+class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListener {
 
     private lateinit var binding: ActivityEventPageBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: EventNameAdapter
-    private lateinit var eventList: MutableList<EventData2>
+    private lateinit var adapter: EventNameAdapter2
+    private lateinit var liveEventList: MutableList<EventData2>
+    private lateinit var pastEventList: MutableList<EventData2>
     private var db = Firebase.firestore
     private lateinit var eventDocNameList: MutableList<String>
     private var eventNameList: MutableList<String> = mutableListOf()
@@ -62,15 +64,15 @@ class EventsActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         eventDocNameList = mutableListOf()
-        eventList = mutableListOf()
+        liveEventList = mutableListOf()
+        pastEventList = mutableListOf()
 
 
-
-//        binding.recyclerview.setHasFixedSize(true)
-//        binding.recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        adapter = EventNameAdapter(eventList)
-//        recyclerView = binding.recyclerview
-//        recyclerView.adapter = adapter
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        adapter = EventNameAdapter2(liveEventList, this)
+        recyclerView = binding.recyclerview
+        recyclerView.adapter = adapter
 
     }
 
@@ -80,14 +82,27 @@ class EventsActivity : AppCompatActivity() {
                 val snapshot = db.collection("events").get().await()
 
                 if (snapshot != null && !snapshot.isEmpty) {
+                    liveEventList.clear()
                     traverseEvents(db.collection("events"))
+                    recyclerView.adapter = EventNameAdapter2(liveEventList, this@EventsActivity)
                     Log.e("map",eventMap.toString())
+                    Log.e("map",liveEventList.toString())
+                    Log.e("map",pastEventList.toString())
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@EventsActivity, "Error fetching data: ${e.message}", Toast.LENGTH_SHORT).show()
                 Log.e("EventPage", "Error fetching data", e)
             }
         }
+    }
+
+    override fun onItemClick(event: EventData2) {
+        val intent = Intent(this, UserActivity::class.java)
+        intent.putExtra("eventName", event.eventName)
+        intent.putExtra("eventDesc", event.eventDesc)
+        intent.putExtra("endDate", event.endDate)
+        intent.putStringArrayListExtra("eventNameList", ArrayList(event.eventNameList))
+        startActivity(intent)
     }
 
     private suspend fun traverseEvents(eventsCollectionRef: CollectionReference) {
@@ -104,7 +119,18 @@ class EventsActivity : AppCompatActivity() {
                 if (hasAccess) {
                     eventDocNameList.add(eventDocName)
                     eventMap[eventName] = eventNameList.toMutableList()
+                    val eventDesc = doc.getString("eventDesc") ?: "no description"
+                    val endDate = doc.getString("endDate") ?: "no end data"
 
+                    // Create an EventData2 object
+                    val eventData = EventData2(eventName = eventName, eventDesc = eventDesc, endDate = endDate, eventNameList = eventNameList.toMutableList())
+
+                    val islive = doc.getString("status") ?: ""
+                    // Add the eventData to the eventList
+                    if (islive == "live")
+                        liveEventList.add(eventData)
+                    else
+                        pastEventList.add(eventData)
                 }
                 else {
                     eventNameList.add(eventName)

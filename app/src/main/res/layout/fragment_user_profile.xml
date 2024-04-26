@@ -1,173 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".fragments.UserProfileFragment">
 
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <RelativeLayout
-            android:id="@+id/topbar"
+        <TextView
+            android:id="@+id/event_name"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white"
-            android:paddingTop="10dp"
-            android:layout_marginTop="20dp"
-            tools:context=".UserProfilePage">
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_color"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="italic|bold"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="16dp" />
+    </com.google.android.material.card.MaterialCardView>
 
-
-            <TextView
-                android:id="@+id/profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-
-                android:text="Profile"
-                android:textColor="@color/blue"
-                android:textSize="25dp"
-                android:textStyle="bold">
-
-            </TextView>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/middler"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#D0F0FF"
+        android:orientation="horizontal">
+        <ImageView
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_person_add_alt_1_24"/>
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/topbar"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="100dp"
-            android:background="@drawable/edit_text_rounded_corner"
-            android:backgroundTint="@color/white"
-            android:orientation="vertical"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingRight="30dp"
-            android:paddingBottom="15dp">
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:paddingLeft="20dp"
+            android:text="Heads" />
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/email_list_item" />
 
-            <ImageView
-                android:id="@+id/profileac"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/user_sample_img">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#D0F0FF"
+        android:orientation="horizontal">
+        <ImageView
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_person_add_alt_1_24"/>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:paddingLeft="20dp"
+            android:text="Members" />
+    </LinearLayout>
 
-            </ImageView>
-
-            <LinearLayout
-                android:id="@+id/middle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profileac"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:orientation="vertical">
-                <!-- User Name -->
-
-                <TextView
-                    android:id="@+id/username"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-
-                    android:text="Name:"
-                    android:textColor="@color/blue"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/username"
-                    android:text="Username"
-                    android:textColor="@color/black"
-                    android:textSize="17sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/email_list_item" />
 
 
-                <TextView
-                    android:id="@+id/useremail"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-
-                    android:text="Email:"
-                    android:textColor="@color/blue"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/user_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/useremail"
-
-                    android:text="sample@gmail.com"
-                    android:textColor="@color/black"
-                    android:textSize="17sp" />
 
 
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/middle"
-
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="89dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/logoutBt"
-                    style="@android:style/Widget.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/button_color"
-                    android:padding="9dp"
-                    android:text="Logout"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp"
-                    android:textStyle="bold"></androidx.appcompat.widget.AppCompatButton>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/update_profile"
-                    style="@android:style/Widget.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/logoutBt"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/button_color"
-                    android:padding="9dp"
-                    android:text="Updateprofile"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp"
-                    android:textStyle="bold"></androidx.appcompat.widget.AppCompatButton>
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

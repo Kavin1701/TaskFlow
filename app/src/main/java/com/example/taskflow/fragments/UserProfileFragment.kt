@@ -31,19 +31,19 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init(view)
-        registerEvents()
+//        registerEvents()
     }
 
     private fun init(view: View){
         auth = FirebaseAuth.getInstance()
     }
 
-    private fun registerEvents() {
-        binding.logoutBt.setOnClickListener{
-            auth.signOut()
-
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-        }
-    }
+//    private fun registerEvents() {
+//        binding.logoutBt.setOnClickListener{
+//            auth.signOut()
+//
+//            val intent = Intent(requireContext(), MainActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
 }
