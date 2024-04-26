@@ -104,12 +104,14 @@ class EventsActivity : AppCompatActivity() {
                 if (hasAccess) {
                     eventDocNameList.add(eventDocName)
                     eventMap[eventName] = eventNameList.toMutableList()
+
+                }
+                else {
                     eventNameList.add(eventName)
+                    traverseEvents(doc.reference.collection("events"))
+                    eventNameList.removeAt(eventNameList.size - 1)
                 }
 
-                // Traverse subcollections recursively
-                traverseEvents(doc.reference.collection("events"))
-                eventNameList.removeAt(eventNameList.size - 1)
             }
         } catch (e: Exception) {
             Log.e("TraverseEvents", "Error traversing events", e)
