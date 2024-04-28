@@ -1,6 +1,8 @@
 package com.example.taskflow
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,7 +19,12 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_user)
+        Log.e("route", "UserActivity")
         val eventName = intent.getStringExtra("eventName")
+        if (eventName == null){
+            val intent = Intent(this, EventsActivity::class.java)
+            startActivity(intent)
+        }
         val eventDesc = intent.getStringExtra("eventDesc")
         val endDate = intent.getStringExtra("endDate")
         val eventNameList = intent.getStringArrayListExtra("eventNameList")

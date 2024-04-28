@@ -58,6 +58,7 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
         Log.e("map", "something")
 
         registerEvents()
+        Log.e("route", "EventActivity")
     }
 
     private fun init(){
@@ -82,9 +83,9 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
                 val snapshot = db.collection("events").get().await()
 
                 if (snapshot != null && !snapshot.isEmpty) {
-                    liveEventList.clear()
+//                    liveEventList.clear()
                     traverseEvents(db.collection("events"))
-                    recyclerView.adapter = EventNameAdapter2(liveEventList, this@EventsActivity)
+//                    recyclerView.adapter = EventNameAdapter2(liveEventList, this@EventsActivity)
                     Log.e("map",eventMap.toString())
                     Log.e("map",liveEventList.toString())
                     Log.e("map",pastEventList.toString())
@@ -127,8 +128,12 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
 
                     val islive = doc.getString("status") ?: ""
                     // Add the eventData to the eventList
-                    if (islive == "live")
+//                    if ()
+//                        liveEventList.add(eventData)
+                    if (islive == "live" && (!liveEventList.any { it.eventName == eventName })) {
                         liveEventList.add(eventData)
+                        recyclerView.adapter = EventNameAdapter2(liveEventList, this)
+                    }
                     else
                         pastEventList.add(eventData)
                 }

@@ -3,6 +3,7 @@ package com.example.taskflow.fragments
 import EventPage
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,7 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
+        Log.e("route", "LoginActivity")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
