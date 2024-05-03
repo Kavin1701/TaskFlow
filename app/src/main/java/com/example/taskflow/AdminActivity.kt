@@ -126,27 +126,3 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
     }
 
 }
-
-
-
-//        recyclerView = binding.recyclerview
-//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//
-//
-//        eventList = arrayListOf()
-//
-//        db = FirebaseFirestore.getInstance()
-//        db.collection("events").get().addOnSuccessListener {
-//            if (!it.isEmpty){
-//                for (data in it.documents){
-//                    val event: EventData? = data.toObject(EventData::class.java)
-//                    if (event != null) {
-//                        eventList.add(event)
-//                    }
-//                    recyclerView.adapter = EventNameAdapter(eventList)
-//                }
-//            }
-//        }
-//            .addOnFailureListener{
-//                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
-//            }

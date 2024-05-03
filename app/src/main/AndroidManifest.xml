@@ -13,6 +13,9 @@
         android:theme="@style/Theme.TaskFlow"
         tools:targetApi="31">
         <activity
+            android:name=".AddHeadActivity"
+            android:exported="false" />
+        <activity
             android:name=".EventsActivity"
             android:exported="false" />
         <activity

@@ -3,6 +3,7 @@ package com.example.taskflow
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ class UserActivity : AppCompatActivity() {
         val endDate = intent.getStringExtra("endDate")
         val eventNameList = intent.getStringArrayListExtra("eventNameList")
 
+
         bottomUserNavigationView = findViewById(R.id.bottom_navigation_user)
 
         bottomUserNavigationView.setOnItemSelectedListener { menuItem ->
@@ -46,7 +48,7 @@ class UserActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_menu_profile -> {
-                    replaceFragment(UserProfileFragment())
+                    replaceFragment(UserProfileFragment(eventName, eventNameList))
                     true
                 }
                 else -> false

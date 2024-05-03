@@ -6,18 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
-import com.example.taskflow.MainActivity
-import com.example.taskflow.R
-import com.example.taskflow.databinding.FragmentLoginBinding
+import android.widget.Toast
+import com.example.taskflow.AddHeadActivity
 import com.example.taskflow.databinding.FragmentUserProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 
-
-class UserProfileFragment : Fragment() {
+class UserProfileFragment(private val eventName: String?, private val eventList:  ArrayList<String>?) : Fragment() {
     lateinit var binding: FragmentUserProfileBinding
     lateinit var auth: FirebaseAuth
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,19 +27,21 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init(view)
-//        registerEvents()
+
+        registerEvents()
     }
 
     private fun init(view: View){
         auth = FirebaseAuth.getInstance()
     }
 
-//    private fun registerEvents() {
-//        binding.logoutBt.setOnClickListener{
-//            auth.signOut()
-//
-//            val intent = Intent(requireContext(), MainActivity::class.java)
-//            startActivity(intent)
-//        }
-//    }
+    private  fun registerEvents(){
+        binding.addHeads.setOnClickListener{
+            eventList?.add(eventName.toString())
+            val intent = Intent(requireContext(), AddHeadActivity::class.java)
+            intent.putStringArrayListExtra("eventList", eventList)
+            startActivity(intent)
+        }
+    }
+
 }
