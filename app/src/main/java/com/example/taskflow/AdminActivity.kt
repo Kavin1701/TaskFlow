@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickListener {
+class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickListener, EventNameAdapter.OnItemClickListener {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var auth: FirebaseAuth
@@ -42,7 +42,7 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         eventList = mutableListOf()
-        adapter = EventNameAdapter(eventList)
+        adapter = EventNameAdapter(eventList, this)
         recyclerView = binding.recyclerview
         recyclerView.adapter = adapter
     }
@@ -63,7 +63,7 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
                             eventList.add(event)
                         }
                     }
-                    recyclerView.adapter = EventNameAdapter(eventList)
+                    recyclerView.adapter = EventNameAdapter(eventList, this)
                 }
             }
     }
@@ -123,6 +123,10 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to check event existence: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onItemClick(eventName: String, eventDesc: String, endDate: String) {
+        Toast.makeText(this, "have not access", Toast.LENGTH_SHORT).show()
     }
 
 }

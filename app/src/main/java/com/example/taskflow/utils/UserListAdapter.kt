@@ -53,4 +53,6 @@ class UserListAdapter(private val userList: List<UserData>, private val selected
     fun getSelectedUsers(): MutableSet<UserData> {
         return selectedUsers
     }
+
+
 }

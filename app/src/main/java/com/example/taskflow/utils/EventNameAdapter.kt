@@ -7,7 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskflow.R
 
-class EventNameAdapter(private val eventList: MutableList<EventData>) : RecyclerView.Adapter<EventNameAdapter.MyViewHolder>() {
+class EventNameAdapter(private val eventList: MutableList<EventData>,
+                       private val listener: EventNameAdapter.OnItemClickListener) : RecyclerView.Adapter<EventNameAdapter.MyViewHolder>() {
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val Name : TextView = itemView.findViewById(R.id.eventName)
         val Desc : TextView = itemView.findViewById(R.id.eventDesc)
@@ -27,5 +28,15 @@ class EventNameAdapter(private val eventList: MutableList<EventData>) : Recycler
         holder.Name.text = eventList[position].eventName
         holder.Desc.text = eventList[position].eventDesc
         holder.eventDate.text = eventList[position].endDate
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(holder.Name.text.toString(),
+                holder.Desc.text.toString(),
+                holder.eventDate.text.toString(),
+                )
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(eventName: String, eventDesc: String, endDate: String)
     }
 }

@@ -40,7 +40,7 @@ class UserActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_menu_tasks -> {
-                    replaceFragment(UserTasksFragment(eventName))
+                    replaceFragment(UserTasksFragment(eventName, eventNameList))
                     true
                 }
                 R.id.bottom_menu_chat -> {

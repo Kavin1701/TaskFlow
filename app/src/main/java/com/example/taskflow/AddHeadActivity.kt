@@ -17,9 +17,14 @@ import com.example.taskflow.utils.UserData
 import com.example.taskflow.utils.UserListAdapter
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AddHeadActivity : AppCompatActivity() {
@@ -31,6 +36,7 @@ class AddHeadActivity : AppCompatActivity() {
     private var db = Firebase.firestore
     private lateinit var searchEt: EditText
     private var selectedUsers: MutableSet<UserData> = HashSet()
+    private lateinit var type: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +51,9 @@ class AddHeadActivity : AppCompatActivity() {
         }
 
         eventNameList = intent.getStringArrayListExtra("eventList") ?: ArrayList()
-//        Toast.makeText(this, eventNameList.toString(), Toast.LENGTH_LONG).show()
+        type = intent.getStringExtra("type").toString()
+
+        Toast.makeText(this, type, Toast.LENGTH_LONG).show()
         init()
         getDataFromFirebase()
         registerEvents()
@@ -93,55 +101,43 @@ class AddHeadActivity : AppCompatActivity() {
             }
 
         binding.addheads.setOnClickListener {
-            val db = FirebaseFirestore.getInstance()
 
-//            val
+            GlobalScope.launch(Dispatchers.Main) {
+                val docRef = getDocRef(eventNameList)
+                if (docRef != null){
+                    for (user in adapter.getSelectedUsers()){
+                        val data = hashMapOf("email" to user.email)
+                        docRef.reference.collection(type).add(data)
+                    }
 
-            for (event in eventNameList) {
-                val querySnapshot = db.collection("events")
-                    .whereEqualTo("eventName", event)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        for (document in documents) {
-                            val documentData = document.data
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        // Handle any errors
-                        Log.w(TAG, "Error getting documents: ", exception)
-                    }
+                    Toast.makeText(this@AddHeadActivity,"added", Toast.LENGTH_SHORT).show()
+
+                }
+                finish()
             }
 
-
-
-//
-//            query.get().addOnSuccessListener { documents ->
-//                if (!documents.isEmpty) {
-//                    for (document in documents) {
-//                        val documentReference = document.reference
-//                        // Fetch the document associated with the reference
-//                        documentReference.get().addOnSuccessListener { documentSnapshot ->
-//                            val eventName = documentSnapshot.getString("eventName")
-//                            if (eventName != null) {
-//                                // Print the eventName
-//                                println("Event Name: $eventName")
-//                            }
-//                        }.addOnFailureListener { exception ->
-//                            // Handle failure to fetch document
-//                            println("Error fetching document: ${exception.message}")
-//                        }
-//                    }
-//
-//                } else {
-//                    Toast.makeText(this, "No documents found", Toast.LENGTH_LONG).show()
-//                }
-//            }.addOnFailureListener { exception ->
-//                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_LONG).show()
-//            }
-
-            finish()
         }
 
     }
+
+    suspend fun getDocRef(eventNameList: List<String>): DocumentSnapshot? {
+        val firestore = FirebaseFirestore.getInstance()
+        var eventsCollectionRef = firestore.collection("events").get().await()
+
+        var docRef: DocumentSnapshot? = null
+        for (event in eventNameList) {
+            docRef = eventsCollectionRef.documents.find { it.getString("eventName") == event }
+            if (docRef != null) {
+                val eventName = docRef.getString("eventName")
+                Log.e("helo", "Document found for event: $eventName")
+                 eventsCollectionRef = docRef.reference.collection("events").get().await()
+            } else {
+                Log.e("helo", "No document found for event: $event")
+            }
+        }
+
+        return docRef
+    }
+
 
 }
