@@ -53,7 +53,7 @@ class UserProfileFragment(private val eventName: String?, private val eventList:
     }
 
     private fun init(view: View){
-
+        binding.eventName.text = eventName
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         userList = mutableListOf()

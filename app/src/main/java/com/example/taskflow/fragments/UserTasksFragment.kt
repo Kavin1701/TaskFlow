@@ -2,6 +2,7 @@ package com.example.taskflow.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.taskflow.DetailDataCallback
 import com.example.taskflow.MainActivity
 import com.example.taskflow.R
 import com.example.taskflow.UserActivity
 import com.example.taskflow.databinding.FragmentUserHomeBinding
 import com.example.taskflow.databinding.FragmentUserTasksBinding
+import com.example.taskflow.utils.DetailData
 import com.example.taskflow.utils.EventData
+import com.example.taskflow.utils.EventData2
 import com.example.taskflow.utils.EventNameAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
@@ -22,15 +26,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-
+interface DetailDataCallback {
+    fun onDataReceived(detailList: List<DetailData>, intent: Intent)
+}
 class UserTasksFragment(private val event: String?,
                         private val eventNameList:  ArrayList<String>?)
     : Fragment(), AddEventFragment.DialogNextBtnClickListener,
-        EventNameAdapter.OnItemClickListener{
+        EventNameAdapter.OnItemClickListener, DetailDataCallback{
     lateinit var binding: FragmentUserTasksBinding
     private var db = Firebase.firestore
     private lateinit var auth: FirebaseAuth
@@ -38,6 +45,7 @@ class UserTasksFragment(private val event: String?,
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EventNameAdapter
     private lateinit var eventList: MutableList<EventData>
+    private var detailList: MutableList<DetailData> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -163,8 +171,88 @@ class UserTasksFragment(private val event: String?,
         intent.putExtra("eventName", eventName)
         intent.putExtra("eventDesc", eventDesc)
         intent.putExtra("endDate", endDate)
-        intent.putStringArrayListExtra("eventNameList", ArrayList(eventNameList))
+        val eventListTemp = eventNameList?.let { list ->
+            ArrayList<String>().apply {
+                list.forEach { element ->
+                    add(element)
+                }
+            }
+
+        }
+        if (event != null) {
+            eventListTemp?.add(eventName)
+        }
+        intent.putStringArrayListExtra("eventNameList", eventListTemp)
+        val detailListJson = Gson().toJson(detailList)
+
+        intent.putExtra("detailList", detailListJson)
         startActivity(intent)
+//        getDataFromFirebase1(EventData2(eventName, eventDesc, endDate, eventNameList), intent, this)
+    }
+
+    private fun getDataFromFirebase1(event: EventData2, intent: Intent, callback: DetailDataCallback) {
+        GlobalScope.launch(Dispatchers.Main) {
+            db = FirebaseFirestore.getInstance()
+
+            val docRef = getDocRef1(event)
+            if (docRef != null) {
+                docRef.reference.collection("details")
+                    .addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
+                            Toast.makeText(requireContext(), exception.toString(), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        if (snapshot != null && !snapshot.isEmpty) {
+                            detailList.clear()
+                            for (data in snapshot.documents) {
+                                val detail: DetailData? = data.toObject(DetailData::class.java)
+                                if (detail != null) {
+                                    detailList.add(detail)
+                                }
+                            }
+                            callback.onDataReceived(detailList, intent)
+//                            Log.e("check3", detailList.toString())
+                        }
+                    }
+            }
+        }
+    }
+
+    override fun onDataReceived(detailList: List<DetailData>, intent: Intent) {
+        val detailListJson = Gson().toJson(detailList)
+
+        // Put the JSON string into the intent
+        intent.putExtra("detailList", detailListJson)
+        startActivity(intent)
+    }
+
+    suspend fun getDocRef1(event: EventData2): DocumentSnapshot? {
+        val eventListTemp = event.eventNameList?.let { list ->
+            ArrayList<String>().apply {
+                list.forEach { element ->
+                    add(element)
+                }
+            }
+        }
+        eventListTemp?.add(event.eventName.toString())
+        Log.e("check1", eventListTemp.toString())
+
+        var eventsCollectionRef = db.collection("events").get().await()
+//
+        var docRef: DocumentSnapshot? = null
+        for (event in eventListTemp!!) {
+            docRef = eventsCollectionRef.documents.find { it.getString("eventName") == event }
+            if (docRef != null) {
+                val eventName = docRef.getString("eventName")
+//                Log.e("helo", "Document found for event: $eventName")
+                eventsCollectionRef = docRef.reference.collection("events").get().await()
+            } else {
+//                Log.e("helo", "No document found for event: $event")
+            }
+        }
+
+        return docRef
     }
 
 }

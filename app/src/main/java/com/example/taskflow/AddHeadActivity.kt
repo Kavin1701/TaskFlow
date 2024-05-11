@@ -53,7 +53,6 @@ class AddHeadActivity : AppCompatActivity() {
         eventNameList = intent.getStringArrayListExtra("eventList") ?: ArrayList()
         type = intent.getStringExtra("type").toString()
 
-        Toast.makeText(this, type, Toast.LENGTH_LONG).show()
         init()
         getDataFromFirebase()
         registerEvents()

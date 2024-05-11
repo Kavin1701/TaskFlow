@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskflow.databinding.ActivityEventPageBinding
+import com.example.taskflow.utils.DetailData
+import com.example.taskflow.utils.DetailDataAdapter
 import com.example.taskflow.utils.EventData
 import com.example.taskflow.utils.EventData2
 import com.example.taskflow.utils.EventNameAdapter
@@ -21,12 +23,18 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListener {
+
+interface DetailDataCallback {
+    fun onDataReceived(detailList: List<DetailData>, intent: Intent)
+}
+
+class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListener, DetailDataCallback {
 
     private lateinit var binding: ActivityEventPageBinding
     private lateinit var auth: FirebaseAuth
@@ -39,16 +47,13 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
     private var eventNameList: MutableList<String> = mutableListOf()
     private var e: String = ""
     val eventMap: MutableMap<String, MutableList<String>> = mutableMapOf()
+    private var detailList: MutableList<DetailData> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContentView(R.layout.activity_events)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
 
         binding = ActivityEventPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -103,7 +108,76 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
         intent.putExtra("eventDesc", event.eventDesc)
         intent.putExtra("endDate", event.endDate)
         intent.putStringArrayListExtra("eventNameList", ArrayList(event.eventNameList))
+        getDataFromFirebase1(event, intent, this@EventsActivity)
+//        startActivity(intent)
+    }
+
+
+
+
+    private fun getDataFromFirebase1(event: EventData2, intent: Intent, callback: DetailDataCallback) {
+        GlobalScope.launch(Dispatchers.Main) {
+            db = FirebaseFirestore.getInstance()
+
+            val docRef = getDocRef(event)
+            if (docRef != null) {
+                docRef.reference.collection("details")
+                    .addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
+                            Toast.makeText(this@EventsActivity, exception.toString(), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        if (snapshot != null && !snapshot.isEmpty) {
+                            detailList.clear()
+                            for (data in snapshot.documents) {
+                                val detail: DetailData? = data.toObject(DetailData::class.java)
+                                if (detail != null) {
+                                    detailList.add(detail)
+                                }
+                            }
+                            callback.onDataReceived(detailList, intent)
+//                            Log.e("check3", detailList.toString())
+                        }
+                    }
+            }
+        }
+    }
+
+    override fun onDataReceived(detailList: List<DetailData>, intent: Intent) {
+        val detailListJson = Gson().toJson(detailList)
+
+        // Put the JSON string into the intent
+        intent.putExtra("detailList", detailListJson)
         startActivity(intent)
+    }
+
+    suspend fun getDocRef(event: EventData2): DocumentSnapshot? {
+        val eventListTemp = event.eventNameList?.let { list ->
+            ArrayList<String>().apply {
+                list.forEach { element ->
+                    add(element)
+                }
+            }
+        }
+        eventListTemp?.add(event.eventName.toString())
+        Log.e("check1", eventListTemp.toString())
+
+        var eventsCollectionRef = db.collection("events").get().await()
+//
+        var docRef: DocumentSnapshot? = null
+        for (event in eventListTemp!!) {
+            docRef = eventsCollectionRef.documents.find { it.getString("eventName") == event }
+            if (docRef != null) {
+                val eventName = docRef.getString("eventName")
+//                Log.e("helo", "Document found for event: $eventName")
+                eventsCollectionRef = docRef.reference.collection("events").get().await()
+            } else {
+//                Log.e("helo", "No document found for event: $event")
+            }
+        }
+
+        return docRef
     }
 
     private suspend fun traverseEvents(eventsCollectionRef: CollectionReference) {

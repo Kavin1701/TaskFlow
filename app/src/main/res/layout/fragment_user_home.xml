@@ -37,34 +37,35 @@
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:background="@drawable/rounded_corner"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        android:background="@drawable/rounded_corner"
-        app:layout_constraintVertical_bias="0.0"
-        android:orientation="vertical">
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:text="Event Description:"
             android:textColor="@color/blue"
-            android:layout_margin="10dp"
-            android:textSize="15sp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/event_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thiran is an annual Intra-Collegiate event organized by the Computer Applications Association and Computational Science Association"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/grey1"
             android:layout_marginRight="10dp"
-            />
+            android:textSize="16dp"
+            android:text="Thiran is an annual Intra-Collegiate event organized by the Computer Applications Association and Computational Science Association"
+            android:textColor="@color/grey1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,20 +75,63 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_schedule_green_24"
-                />
+                android:src="@drawable/baseline_schedule_green_24" />
+
             <TextView
+                android:id="@+id/end_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/task_assign_date"
-                android:text="21-05-2024"
-                />
+                android:text="21-05-2024" />
 
         </LinearLayout>
 
-
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:text="Details"
+        android:textColor="@color/blue1"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.397" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_eventBt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="#FFFFFF"
+        android:src="@drawable/baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="421dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/details_list_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

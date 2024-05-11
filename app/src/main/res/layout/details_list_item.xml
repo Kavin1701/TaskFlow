@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="16dp"
+
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:paddingTop="7dp"
+            android:id="@+id/title"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Team Size"
+            android:gravity="center"
+            android:textColor="@color/blue1"
+            android:textSize="16dp"
+            android:textStyle="italic" />
+        <TextView
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="------------------------------------------------------------------------------"
+            android:gravity="center"
+            android:textColor="@color/blue1"
+            android:textSize="16dp"
+            android:textStyle="italic" />
+        <TextView
+            android:paddingLeft="15dp"
+            android:paddingBottom="7dp"
+            android:id="@+id/detail"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4 members"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="italic" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

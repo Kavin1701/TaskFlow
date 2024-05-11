@@ -126,7 +126,13 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
     }
 
     override fun onItemClick(eventName: String, eventDesc: String, endDate: String) {
-        Toast.makeText(this, "have not access", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "have not access", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, UserActivity::class.java)
+        intent.putExtra("eventName", eventName)
+        intent.putExtra("eventDesc", eventDesc)
+        intent.putExtra("endDate", endDate)
+        intent.putStringArrayListExtra("eventNameList", ArrayList())
+        startActivity(intent)
     }
 
 }
