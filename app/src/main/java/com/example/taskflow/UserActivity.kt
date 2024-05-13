@@ -24,7 +24,6 @@ class UserActivity : AppCompatActivity() {
     private lateinit var bottomUserNavigationView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         auth = FirebaseAuth.getInstance()
 
         setContentView(R.layout.activity_user)

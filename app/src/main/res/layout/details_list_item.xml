@@ -34,7 +34,7 @@
             android:textSize="16dp"
             android:textStyle="italic" />
         <TextView
-            android:paddingLeft="15dp"
+            android:paddingLeft="20dp"
             android:paddingBottom="7dp"
             android:id="@+id/detail"
             android:background="@color/white"

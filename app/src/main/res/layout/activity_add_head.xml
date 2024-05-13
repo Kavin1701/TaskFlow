@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddHeadActivity">
+    tools:context=".AddHeadActivity"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,6 +33,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="19dp"
+            android:backgroundTint="#34A335"
+            android:drawableLeft="@drawable/baseline_add_24"
+            android:drawableTint="@color/white"
+            android:textColor="@color/white"
             android:text="ADD" />
 
     </RelativeLayout>
@@ -61,8 +66,7 @@
                 android:background="@color/white"
                 android:drawableStart="@drawable/outline_content_paste_search_24"
                 android:drawablePadding="20dp"
-                android:hint="enter the name to search.."
-                android:inputType="textEmailAddress"
+                android:hint="Enter the name to search"
                 android:paddingStart="12dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/black"
