@@ -180,14 +180,16 @@ class UserTasksFragment(private val event: String?,
 
         }
         if (event != null) {
-            eventListTemp?.add(eventName)
+            eventListTemp?.add(event)
         }
-        intent.putStringArrayListExtra("eventNameList", eventListTemp)
-        val detailListJson = Gson().toJson(detailList)
 
-        intent.putExtra("detailList", detailListJson)
-        startActivity(intent)
-//        getDataFromFirebase1(EventData2(eventName, eventDesc, endDate, eventNameList), intent, this)
+        intent.putStringArrayListExtra("eventNameList", eventListTemp)
+//        Log.e("t1", eventName)
+//        Log.e("t1", eventDesc)
+//        Log.e("t1", endDate)
+//        event?.let { Log.e("t1", it) }
+//        Log.e("t1", eventListTemp.toString())
+        getDataFromFirebase1(EventData2(eventName, eventDesc, endDate, eventListTemp), intent, this)
     }
 
     private fun getDataFromFirebase1(event: EventData2, intent: Intent, callback: DetailDataCallback) {
@@ -214,6 +216,10 @@ class UserTasksFragment(private val event: String?,
                             callback.onDataReceived(detailList, intent)
 //                            Log.e("check3", detailList.toString())
                         }
+                        else{
+                            detailList.clear()
+                            callback.onDataReceived(detailList, intent)
+                        }
                     }
             }
         }
@@ -221,6 +227,7 @@ class UserTasksFragment(private val event: String?,
 
     override fun onDataReceived(detailList: List<DetailData>, intent: Intent) {
         val detailListJson = Gson().toJson(detailList)
+
 
         // Put the JSON string into the intent
         intent.putExtra("detailList", detailListJson)

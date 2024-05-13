@@ -139,13 +139,21 @@ class EventsActivity : AppCompatActivity(), EventNameAdapter2.OnItemClickListene
                             callback.onDataReceived(detailList, intent)
 //                            Log.e("check3", detailList.toString())
                         }
+                        else{
+                            detailList.clear()
+                            callback.onDataReceived(detailList, intent)
+                        }
                     }
+            }
+            else{
+
             }
         }
     }
 
     override fun onDataReceived(detailList: List<DetailData>, intent: Intent) {
         val detailListJson = Gson().toJson(detailList)
+        Log.e("hai","hai")
 
         // Put the JSON string into the intent
         intent.putExtra("detailList", detailListJson)
