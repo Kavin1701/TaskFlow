@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class MessageAdapter(private val currentUserEmail: String) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
-    private val messages = mutableListOf<Message>()
+    private val messages = mutableListOf<ChatData>()
     private val userMap = mutableMapOf<String, String>() // Map email addresses to usernames
 
     // Initialize Firestore
@@ -31,7 +31,7 @@ class MessageAdapter(private val currentUserEmail: String) : RecyclerView.Adapte
         return messages.size
     }
 
-    fun addMessage(message: Message) {
+    fun addMessage(message: ChatData) {
         messages.add(message)
         notifyDataSetChanged()
     }
@@ -47,7 +47,7 @@ class MessageAdapter(private val currentUserEmail: String) : RecyclerView.Adapte
         private val messageTextView: TextView = itemView.findViewById(R.id.message_text_view)
         private val timestampTextView: TextView = itemView.findViewById(R.id.timestamp_text_view)
 
-        fun bind(message: Message) {
+        fun bind(message: ChatData) {
             // Use the userMap to get the username associated with the sender's email
             val senderUsername = userMap[message.sender] ?: message.sender
 

@@ -54,7 +54,7 @@ class UserActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_menu_chat -> {
-                    replaceFragment(UserChatFragment(eventName))
+                    replaceFragment(UserChatFragment(eventName, eventNameList))
                     true
                 }
                 R.id.bottom_menu_profile -> {

@@ -3,7 +3,7 @@ package com.example.taskflow.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class Message(
+data class ChatData(
     var text: String = "",
     var sender: String = "",
     var timestamp: Long = 0
