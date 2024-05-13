@@ -3,21 +3,31 @@ package com.example.taskflow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskflow.databinding.ActivityAdminBinding
 import com.example.taskflow.fragments.AddEventFragment
+import com.example.taskflow.utils.DetailData
 import com.example.taskflow.utils.EventData
+import com.example.taskflow.utils.EventData2
 import com.example.taskflow.utils.EventNameAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickListener, EventNameAdapter.OnItemClickListener {
+
+class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickListener, EventNameAdapter.OnItemClickListener, DetailDataCallback {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var auth: FirebaseAuth
@@ -26,6 +36,7 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
     private lateinit var adapter: EventNameAdapter
     private lateinit var eventList: MutableList<EventData>
     private var db = Firebase.firestore
+    private var detailList: MutableList<DetailData> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,7 +143,80 @@ class AdminActivity : AppCompatActivity(), AddEventFragment.DialogNextBtnClickLi
         intent.putExtra("eventDesc", eventDesc)
         intent.putExtra("endDate", endDate)
         intent.putStringArrayListExtra("eventNameList", ArrayList())
+        getDataFromFirebase1(EventData2(eventName, eventDesc, endDate, mutableListOf()), intent, this)
+    }
+
+    private fun getDataFromFirebase1(event: EventData2, intent: Intent, callback: DetailDataCallback) {
+        GlobalScope.launch(Dispatchers.Main) {
+            db = FirebaseFirestore.getInstance()
+
+            val docRef = getDocRef(event)
+            if (docRef != null) {
+                docRef.reference.collection("details")
+                    .addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
+                            Toast.makeText(this@AdminActivity, exception.toString(), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        if (snapshot != null && !snapshot.isEmpty) {
+                            detailList.clear()
+                            for (data in snapshot.documents) {
+                                val detail: DetailData? = data.toObject(DetailData::class.java)
+                                if (detail != null) {
+                                    detailList.add(detail)
+                                }
+                            }
+                            callback.onDataReceived(detailList, intent)
+//                            Log.e("check3", detailList.toString())
+                        }
+                        else{
+                            detailList.clear()
+                            callback.onDataReceived(detailList, intent)
+                        }
+                    }
+            }
+            else{
+
+            }
+        }
+    }
+
+    override fun onDataReceived(detailList: List<DetailData>, intent: Intent) {
+        val detailListJson = Gson().toJson(detailList)
+        Log.e("hai","hai")
+
+        // Put the JSON string into the intent
+        intent.putExtra("detailList", detailListJson)
         startActivity(intent)
+    }
+
+    suspend fun getDocRef(event: EventData2): DocumentSnapshot? {
+        val eventListTemp = event.eventNameList?.let { list ->
+            ArrayList<String>().apply {
+                list.forEach { element ->
+                    add(element)
+                }
+            }
+        }
+        eventListTemp?.add(event.eventName.toString())
+        Log.e("check1", eventListTemp.toString())
+
+        var eventsCollectionRef = db.collection("events").get().await()
+//
+        var docRef: DocumentSnapshot? = null
+        for (event in eventListTemp!!) {
+            docRef = eventsCollectionRef.documents.find { it.getString("eventName") == event }
+            if (docRef != null) {
+                val eventName = docRef.getString("eventName")
+//                Log.e("helo", "Document found for event: $eventName")
+                eventsCollectionRef = docRef.reference.collection("events").get().await()
+            } else {
+//                Log.e("helo", "No document found for event: $event")
+            }
+        }
+
+        return docRef
     }
 
 }
